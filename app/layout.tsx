@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
-import { cn } from '/@lib/utils';
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +26,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn}>{children}</body>
+      <body
+        className={cn(
+          "min-h-screen bg-dark-300 font-sans antialiased",
+          fontSans.variable
+        )}
+      >
+        <ThemeProvider attribute="class" defaultTheme="dark">
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
