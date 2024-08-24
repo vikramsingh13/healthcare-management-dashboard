@@ -14,13 +14,13 @@ import CustomFormField from "@/components/CustomFormField";
 
 // Define enum for the form field types to be used by the CustomFormField component
 export enum FormFieldType {
-  INPUT = 'input',
-  TEXTAREA = 'textarea',
-  PHONE_INPUT = 'phoneInput',
-  CHECKBOX = 'checkbox',
-  DATE_PICKER = 'datePicker',
-  SELECT = 'select',
-  SKELETON = 'skeleton',
+  INPUT = "input",
+  TEXTAREA = "textarea",
+  PHONE_INPUT = "phoneInput",
+  CHECKBOX = "checkbox",
+  DATE_PICKER = "datePicker",
+  SELECT = "select",
+  SKELETON = "skeleton",
 }
 
 // Define the form schema using zod library
@@ -53,15 +53,33 @@ const PatientForm = () => {
           <h1 className="header">Welcome!</h1>
           <p className="text-dark-700">Signup to get started with us.</p>
         </section>
+        {/* Use the CustomFormField component to render the name input field */}
         <CustomFormField
-          fieldType = {FormFieldType.INPUT}
+          fieldType={FormFieldType.INPUT}
           control={form.control}
           name="name"
           label="Full Name"
           placeholder="John Doe"
           iconSrc="/assets/icons/user.svg"
           iconAlt="user"
-
+        />
+        {/* Use the CustomFormField component to render the email input field */}
+        <CustomFormField
+          fieldType={FormFieldType.INPUT}
+          control={form.control}
+          name="email"
+          label="Email"
+          placeholder="example@email.com"
+          iconSrc="/assets/icons/email.svg"
+          iconAlt="email"
+        />
+        {/* Use the CustomFormField component to render the phone input field */}
+        <CustomFormField
+          fieldType={FormFieldType.PHONE_INPUT}
+          control={form.control}
+          name="phone"
+          label="Phone number"
+          placehoolder="555-555-5555"
         />
         <Button type="submit">Submit</Button>
       </form>

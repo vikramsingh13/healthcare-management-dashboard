@@ -11,7 +11,7 @@ export default function Home() {
             // todo replace Image with regular img tag
           }
           <Image
-            src="/assets/icons/logo-full.svg"
+            src="/favicon.ico"
             height={1000}
             width={1000}
             alt="Healthcare Management System Logo"

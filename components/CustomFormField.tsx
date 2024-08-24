@@ -18,6 +18,14 @@ import { Control } from "react-hook-form";
 // Import FormFieldType enum to be used by the CustomFormFieldProps
 import { FormFieldType } from "@/components/forms/PatientForm";
 
+// Import phone input component and styles from react-phone-number-input library
+import 'react-phone-number-input/style.css';
+import PhoneInput from 'react-phone-number-input';
+
+import Image from "next/image";
+
+
+
 // Define the props for the CustomFormField component
 interface CustomFormFieldProps {
   fieldType: FormFieldType;
@@ -44,7 +52,48 @@ const RenderField = ({
   field: any;
   props: CustomFormFieldProps;
 }) => {
-  return <Input type="text" placeholder="Full Name" />;
+  const { fieldType, iconSrc, iconAlt, placeholder } = props;
+
+  switch (fieldType) {
+    case FormFieldType.INPUT:
+      return (
+        <div className="flex rounded-md border border-dark-500 bg-dark-400">
+          {iconSrc && (
+            <Image
+              src={iconSrc}
+              height={24}
+              width={24}
+              alt={iconAlt || "icon"}
+              className="ml-2"
+            />
+          )}
+          <FormControl>
+            <Input
+              placeholder={placeholder}
+              {...field}
+              className="shad-input border-0"
+            />
+          </FormControl>
+        </div>
+      );
+    case FormFieldType.PHONE_INPUT:
+      return (
+        <FormControl>
+          <PhoneInput 
+            defaultCountry="CA"
+            placeholder={placeholder}
+            international
+            withCountryCallingCode
+            // E164 is the international standard for phone numbers to ensure each device on the has the globally unique number
+            value={field.value as E164Number | undefined}
+            onChange={field.onChange}
+            className="input-phone"
+          />
+        </FormControl>
+      )
+    default:
+      break;
+  }
 };
 
 // CustomFormField component
