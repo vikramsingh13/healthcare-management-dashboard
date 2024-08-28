@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 // zod is a library used for data validation
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,9 +10,15 @@ import { useForm } from "react-hook-form";
 // Import UI components for the form
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-
 // Import the custom form field
 import CustomFormField from "@/components/CustomFormField";
+// Import the SubmitButton component to be used as custom submit button
+import SubmitButton from "@/components/SubmitButton";
+
+// Import the UserFormValidation schema for the sign up form validation
+import { UserFormValidation } from "@/lib/validation";
+// Import the router hook from next/navigation to help with redirection
+import { useRouter } from "next/navigation";
 
 // Define enum for the form field types to be used by the CustomFormField component
 export enum FormFieldType {
@@ -23,27 +31,61 @@ export enum FormFieldType {
   SKELETON = "skeleton",
 }
 
-// Define the form schema using zod library
-const formSchema = z.object({
-  // We want to validate the username field and make sure it is at least 3 characters long
-  username: z.string().min(3, {
-    message: "Username must be at least 3 characters long.",
-  }),
-});
-
 const PatientForm = () => {
-  // Define the form using useForm hook from react-hook-form
-  const form = useForm<z.infer<typeof formSchema>>({
-    // Use zodResolver to validate the form using the formSchema
-    resolver: zodResolver(formSchema),
+  // useRouter is coming from next/navigation.
+  // router will be used for user creation and redirection.
+  const router = useRouter();
+  // Define state for loading state of the form.
+  // This will be used to show a loading spinner for the submit button and such.
+  const [isLoading, setIsLoading] = useState(false);
+  // Define the form using useForm hook from react-hook-form.
+  const form = useForm<z.infer<typeof UserFormValidation>>({
+    // Use zodResolver to validate the form using the formSchema.
+    resolver: zodResolver(UserFormValidation),
     defaultValues: {
-      username: "",
+      name: "",
+      email: "",
+      phone: "",
     },
   });
 
-  // Define submit handler
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  // createUser function that will return a promise.
+  const createUser = async (userData: any) => {
+    return new Promise((resolve, reject) => {
+      // Simulating an API call to create a user.
+      setTimeout(() => {
+        resolve(userData);
+      }, 2000);
+    });
+  }
+
+  // Submit handler that will be called when the form is submitted.
+  // User will be created using the form values and on success, user will be redirected to the patient registration page.
+  const onSubmit = async(values: z.infer<typeof UserFormValidation>) => {
+    setIsLoading(true);
     console.log(values);
+
+    // Create the user object from the form values
+    try {
+      // Destructure the form values into the userData object
+      const { name, email, phone } = values;
+      
+
+      // Create the user using createUser function that handles the API calls
+      const user = await createUser({ name, email, phone });
+      const userId = "adsfafasfas";
+      // Redirect the user to the user profile page
+      if (user) {
+        // Redirect the user to the patient registration page with the user id
+        router.push(`/patients/${userId}/register`);
+      }
+
+      // Set the loading state to false after user creation in case the redirection fails
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+
   }
 
   return (
@@ -81,7 +123,7 @@ const PatientForm = () => {
           label="Phone number"
           placehoolder="555-555-5555"
         />
-        <Button type="submit">Submit</Button>
+        <SubmitButton isLoading={isLoading}>Sign Up</SubmitButton>
       </form>
     </Form>
   );
