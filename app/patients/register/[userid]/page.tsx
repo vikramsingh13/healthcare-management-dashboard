@@ -32,7 +32,7 @@ const Register = () => {
       </section>
 
       <Image
-        src="/assets/images/register-img.jpg"
+        src="/assets/images/register-img.png"
         height={1000}
         width={1000}
         alt="patient registration image of doctor smiling"

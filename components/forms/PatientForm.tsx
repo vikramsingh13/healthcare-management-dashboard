@@ -67,7 +67,7 @@ const PatientForm = () => {
       // Redirect the user to the user profile page
       if (user) {
         // Redirect the user to the patient registration page with the user id
-        router.push(`/patients/${user.$id}/register`);
+        router.push(`/patients/register/${user.$id}`);
       }
 
       // Set the loading state to false after user creation in case the redirection fails
