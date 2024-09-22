@@ -2,25 +2,28 @@
 
 import { useState } from "react";
 
-// zod is a library used for data validation
+// zod is a library used for data validation.
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-// Import UI components for the form
+// Import UI components for the form.
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-// Import the custom form field
+// Import the custom form field.
 import CustomFormField from "@/components/CustomFormField";
-// Import the SubmitButton component to be used as custom submit button
+// Import the SubmitButton component to be used as custom submit button.
 import SubmitButton from "@/components/SubmitButton";
 
-// Import the UserFormValidation schema for the sign up form validation
+// Import the UserFormValidation schema for the sign up form validation.
 import { UserFormValidation } from "@/lib/validation";
-// Import the router hook from next/navigation to help with redirection
+// Import the router hook from next/navigation to help with redirection.
 import { useRouter } from "next/navigation";
 
-// Define enum for the form field types to be used by the CustomFormField component
+// Import the createUser function from the lib/actions.
+import { createUser } from "@/lib/actions/patient.actions";
+
+// Define enum for the form field types to be used by the CustomFormField component.
 export enum FormFieldType {
   INPUT = "input",
   TEXTAREA = "textarea",
@@ -49,35 +52,22 @@ const PatientForm = () => {
     },
   });
 
-  // createUser function that will return a promise.
-  const createUser = async (userData: any) => {
-    return new Promise((resolve, reject) => {
-      // Simulating an API call to create a user.
-      setTimeout(() => {
-        resolve(userData);
-      }, 2000);
-    });
-  }
-
   // Submit handler that will be called when the form is submitted.
   // User will be created using the form values and on success, user will be redirected to the patient registration page.
   const onSubmit = async(values: z.infer<typeof UserFormValidation>) => {
     setIsLoading(true);
-    console.log(values);
 
     // Create the user object from the form values
     try {
       // Destructure the form values into the userData object
       const { name, email, phone } = values;
-      
 
       // Create the user using createUser function that handles the API calls
       const user = await createUser({ name, email, phone });
-      const userId = "adsfafasfas";
       // Redirect the user to the user profile page
       if (user) {
         // Redirect the user to the patient registration page with the user id
-        router.push(`/patients/${userId}/register`);
+        router.push(`/patients/${user.$id}/register`);
       }
 
       // Set the loading state to false after user creation in case the redirection fails
